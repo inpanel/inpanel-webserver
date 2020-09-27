@@ -1,0 +1,13 @@
+[Unit]
+Description = inpanel daemon
+After = rc.local.service
+
+[Service]
+Type = simple
+User = root
+Group = root
+ExecStart = /usr/bin/python /root/inpanel-webserver/inpanel.py
+StartLimitInterval = 30min
+
+[Install]
+WantedBy = multi-user.target
