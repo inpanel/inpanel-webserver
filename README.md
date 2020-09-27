@@ -1,2 +1,2 @@
-# inwebserver
-A Lightweight Web Framework in Python
+# inpanel-webserver
+the InPanel Web Server
