@@ -11,6 +11,17 @@ def xsrf():
     response.set_header('Server', server_name)
     return ''
 
+
+def authstatus():
+    response.set_header('Server', server_name)
+    return 'authstatus'
+
+def login():
+    response.set_header('Server', server_name)
+    return {
+        'token': 343434
+    }
+
 def show_client_ip():
     response.set_header('Server', server_name)
     ip = request.environ.get('REMOTE_ADDR')

@@ -21,22 +21,30 @@ settings = {
     'gzip': True
 }
 
+
 @app.route('/index', method=['GET'])
 def index():
     response.set_header('Server', server_name)
-    return template('<b>Welcome to {{server_name}}</b>!', server_name=server_name)
+    return template('<b>Welcome to {{server_name}}</b>!',
+                    server_name=server_name)
 
-app.route('/', ['GET'], fun.server_static)
-app.route('/xsrf', ['GET'], fun.xsrf)
-app.route('/hello/<name>', ['GET'], fun.hello)
-app.route('/static/', ['GET'], fun.server_static)
-app.route('/static/<filepath:path>', ['GET'], fun.server_static)
-app.route('/partials/<filepath:path>', ['GET'], fun.server_partials)
-app.route('/download/<filename:path>', ['GET'], fun.download)
-app.route('/getclientip', ['GET'], fun.show_client_ip)
-app.error(404, fun.error404)
-app.route('/version', ['GET'], fun.version)
-app.route('/version/<type>', ['GET'], fun.version)
+
+def init_router(app):
+    app.route('/', ['GET'], fun.server_static)
+    app.route('/xsrf', ['GET'], fun.xsrf)
+    app.route('/authstatus', ['POST'], fun.authstatus)
+    app.route('/login', ['POST'], fun.login)
+    app.route('/hello/<name>', ['GET'], fun.hello)
+    app.route('/static/', ['GET'], fun.server_static)
+    app.route('/static/<filepath:path>', ['GET'], fun.server_static)
+    app.route('/partials/<filepath:path>', ['GET'], fun.server_partials)
+    app.route('/download/<filename:path>', ['GET'], fun.download)
+    app.route('/getclientip', ['GET'], fun.show_client_ip)
+    app.error(404, fun.error404)
+    app.route('/version', ['GET'], fun.version)
+    app.route('/version/<type>', ['GET'], fun.version)
+
 
 if __name__ == '__main__':
+    init_router(app)
     run(app=app, host='localhost', port=38080, debug=True)
