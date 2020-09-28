@@ -1,9 +1,10 @@
 [Unit]
-Description = inpanel daemon
-After = rc.local.service
+Description = InPanel Web Server
+After = rc.local.service network.target network-online.target
 
 [Service]
 Type = simple
+PIDFile = /var/run/inpanel.pid
 User = root
 Group = root
 ExecStart = /usr/bin/python /root/inpanel-webserver/inpanel.py
@@ -11,3 +12,4 @@ StartLimitInterval = 30min
 
 [Install]
 WantedBy = multi-user.target
+# /lib/systemd/system/inpanel.service

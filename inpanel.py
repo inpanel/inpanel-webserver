@@ -6,15 +6,19 @@
 #
 # InPanel is distributed under the terms of the New BSD License.
 # The full license can be found in 'LICENSE'.
-
 '''InPanel Web Server Module.'''
 
-from bottle import Bottle, route, run, template, error, static_file, request, response, redirect
+from os import getpid
 from os.path import join
+
 import fun
+from bottle import (Bottle, error, redirect, request, response, route, run,
+                    template)
 from common import root_path, server_name
 
 app = Bottle()
+pid = str(getpid())
+pidfile = '/var/run/inpanel.pid'
 certfile = join(root_path, 'certificate', 'inpanel.crt')
 keyfile = join(root_path, 'certificate', 'inpanel.key')
 
@@ -37,6 +41,11 @@ def index():
     response.set_header('Server', server_name)
     return template('<b>Welcome to {{server_name}}</b>!',
                     server_name=server_name)
+
+
+def init_pid():
+    with open(pidfile, 'w') as f:
+        f.write(pid)
 
 
 def init_router(app):
@@ -69,4 +78,13 @@ if __name__ == '__main__':
     # before_request = app.hook('before_request')
     init_router(app)
     # before_request(app)
-    run(app=app, host='0.0.0.0', port=38080, debug=True, certfile=certfile, keyfile=keyfile)
+    init_pid()
+    conf = {
+        'app': app,
+        'host': '0.0.0.0',
+        'port': 38080,
+        'debug': True,
+        'certfile': certfile,
+        'keyfile': keyfile
+    }
+    run(**conf)
