@@ -1,5 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+# InPanel Web Server Module.
+# Copyright (c) 2019, doudoudzj
+# All rights reserved.
+#
+# InPanel is distributed under the terms of the New BSD License.
+# The full license can be found in 'LICENSE'.
+
+# Bottle
+# forked from https://github.com/bottlepy/bottle
+
 """
 Bottle is a fast and simple micro-framework for small web applications. It
 offers request dispatching (Routes) with URL parameter support, templates,
@@ -3226,6 +3237,14 @@ class ServerAdapter(object):
         self.options = options
         self.host = host
         self.port = int(port)
+        self.protocol = 'http'
+        self.certfile = self.options.get('certfile')
+        if self.certfile:
+            self.protocol = 'https'
+            del self.options['certfile']
+        self.keyfile = self.options.get('keyfile')
+        if self.keyfile:
+            del self.options['keyfile']
 
     def run(self, handler):  # pragma: no cover
         pass
@@ -3282,6 +3301,13 @@ class WSGIRefServer(ServerAdapter):
         self.srv = make_server(self.host, self.port, app, server_cls,
                                handler_cls)
         self.port = self.srv.server_port  # update port actual port (0 means random)
+
+        if self.certfile:
+            import ssl
+            self.srv.socket = ssl.wrap_socket(self.srv.socket,
+                                              certfile=self.certfile,
+                                              keyfile=self.keyfile,
+                                              server_side=True)
         try:
             self.srv.serve_forever()
         except KeyboardInterrupt:
@@ -3299,18 +3325,11 @@ class CherryPyServer(ServerAdapter):
         self.options['bind_addr'] = (self.host, self.port)
         self.options['wsgi_app'] = handler
 
-        certfile = self.options.get('certfile')
-        if certfile:
-            del self.options['certfile']
-        keyfile = self.options.get('keyfile')
-        if keyfile:
-            del self.options['keyfile']
-
         server = wsgiserver.CherryPyWSGIServer(**self.options)
-        if certfile:
-            server.ssl_certificate = certfile
-        if keyfile:
-            server.ssl_private_key = keyfile
+        if self.certfile:
+            server.ssl_certificate = self.certfile
+        if self.keyfile:
+            server.ssl_private_key = self.keyfile
 
         try:
             server.start()
@@ -3718,8 +3737,8 @@ def run(app=None,
             if server.host.startswith("unix:"):
                 _stderr("Listening on %s\n" % server.host)
             else:
-                _stderr("Listening on http://%s:%d/\n" %
-                        (server.host, server.port))
+                _stderr("Listening on %s://%s:%d/\n" %
+                        (server.protocol, server.host, server.port))
             _stderr("Hit Ctrl-C to quit.\n\n")
 
         if reloader:

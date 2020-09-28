@@ -1,12 +1,22 @@
 #!/usr/bin/env python
-# -*- coding:utf-8 -*-
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2019, doudoudzj
+# All rights reserved.
+#
+# InPanel is distributed under the terms of the New BSD License.
+# The full license can be found in 'LICENSE'.
 
-from bottle import Bottle, route, run, template, error, static_file, request, response
+'''InPanel Web Server Module.'''
+
+from bottle import Bottle, route, run, template, error, static_file, request, response, redirect
 from os.path import join
 import fun
 from common import root_path, server_name
 
 app = Bottle()
+certfile = join(root_path, 'certificate', 'inpanel.crt')
+keyfile = join(root_path, 'certificate', 'inpanel.key')
 
 # settings of application
 settings = {
@@ -45,6 +55,18 @@ def init_router(app):
     app.route('/version/<type>', ['GET'], fun.version)
 
 
+def https_redirect(app):
+    # https://github.com/ali01/bottle-sslify/blob/master/bottle_sslify.py
+    '''Redirect incoming HTTPS requests to HTTPS'''
+    if not request.get_header('X-Forwarded-Proto', 'http') == 'https':
+        if request.url.startswith('http://'):
+            url = request.url.replace('http://', 'https://', 1)
+            code = 301 if app.permanent else 302
+            redirect(url, code=code)
+
+
 if __name__ == '__main__':
+    # before_request = app.hook('before_request')
     init_router(app)
-    run(app=app, host='localhost', port=38080, debug=True)
+    # before_request(app)
+    run(app=app, host='0.0.0.0', port=38080, debug=True, certfile=certfile, keyfile=keyfile)
