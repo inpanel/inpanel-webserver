@@ -85,6 +85,7 @@ if __name__ == '__main__':
         'port': 38080,
         'debug': True,
         'certfile': certfile,
-        'keyfile': keyfile
+        'keyfile': keyfile,
+        'gzip': True
     }
     run(**conf)

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from bottle import template, error, static_file, request, response
 from common import server_name, app_info, root_path
 from os.path import join
@@ -18,8 +21,10 @@ def authstatus():
 
 def login():
     response.set_header('Server', server_name)
+    response.set_cookie('Set-Cookie', 'authed=eWVz|1601441998|62b24007d60ef3ab112018cc4d91b9569b6d6260; Path=/')
     return {
-        'token': 343434
+        'code': 1,
+        'msg': "您已登录成功！"
     }
 
 def show_client_ip():

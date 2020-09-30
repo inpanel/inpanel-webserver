@@ -3238,6 +3238,7 @@ class ServerAdapter(object):
         self.host = host
         self.port = int(port)
         self.protocol = 'http'
+        self.gzip = self.options.get('gzip')
         self.certfile = self.options.get('certfile')
         if self.certfile:
             self.protocol = 'https'
@@ -3298,6 +3299,10 @@ class WSGIRefServer(ServerAdapter):
                 class server_cls(server_cls):
                     address_family = socket.AF_INET6
 
+        if self.gzip:
+            from wsgi_gzipper import Gzipper
+            app = Gzipper(app)
+
         self.srv = make_server(self.host, self.port, app, server_cls,
                                handler_cls)
         self.port = self.srv.server_port  # update port actual port (0 means random)
@@ -3308,6 +3313,7 @@ class WSGIRefServer(ServerAdapter):
                                               certfile=self.certfile,
                                               keyfile=self.keyfile,
                                               server_side=True)
+
         try:
             self.srv.serve_forever()
         except KeyboardInterrupt:
