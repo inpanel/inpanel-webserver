@@ -12,8 +12,7 @@ from os import getpid
 from os.path import join
 
 import fun
-from bottle import (Bottle, error, redirect, request, response, route, run,
-                    template)
+from bottle import (Bottle, redirect, request, response, run, template)
 from common import root_path, server_name
 
 app = Bottle()
@@ -31,7 +30,16 @@ settings = {
     'static_path': join(root_path, 'static'),
     'plugins_path': join(root_path, 'plugins'),
     'xsrf_cookies': True,
-    'cookie_secret': '',
+    'cookie_secret': ''
+}
+
+app_config = {
+    'app': app,
+    'host': '0.0.0.0',
+    'port': 38080,
+    'debug': True,
+    'certfile': certfile,
+    'keyfile': keyfile,
     'gzip': True
 }
 
@@ -76,16 +84,7 @@ def https_redirect(app):
 
 if __name__ == '__main__':
     # before_request = app.hook('before_request')
+    # before_request(https_redirect(app))
     init_router(app)
-    # before_request(app)
     init_pid()
-    conf = {
-        'app': app,
-        'host': '0.0.0.0',
-        'port': 38080,
-        'debug': True,
-        'certfile': certfile,
-        'keyfile': keyfile,
-        'gzip': True
-    }
-    run(**conf)
+    run(**app_config)
