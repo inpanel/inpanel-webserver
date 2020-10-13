@@ -1,7 +1,7 @@
 from os.path import dirname
 
 
-server_name = 'InPanel Web Server'
+server_name = 'INPANEL'
 
 root_path = dirname(__file__)
 

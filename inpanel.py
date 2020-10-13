@@ -9,12 +9,14 @@
 '''InPanel Web Server Module.'''
 
 from os import getpid
-from os.path import join
+from os.path import join, dirname
 
-import fun
-from bottle import (Bottle, redirect, request, response, run, template)
-from common import root_path, server_name
+import core.fun as fun
+from webserver.bottle import (Bottle, redirect, request, response, run,
+                              template)
+from common import server_name
 
+root_path = dirname(__file__)
 app = Bottle()
 pid = str(getpid())
 pidfile = '/var/run/inpanel.pid'
@@ -38,15 +40,23 @@ app_config = {
     'host': '0.0.0.0',
     'port': 38080,
     'debug': True,
-    'certfile': certfile,
+    # 'certfile': certfile,
     'keyfile': keyfile,
-    'gzip': True
+    'gzip': True,
+    'reloader': True
 }
 
 
+@app.hook('after_request')
+def hook_after_request():
+    # response.set_header('Server', server_name)
+    response.headers['Server'] = server_name
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    # request.environ['PATH_INFO'] = request.environ['PATH_INFO'].rstrip('/')
+
 @app.route('/index', method=['GET'])
 def index():
-    response.set_header('Server', server_name)
+    # response.set_header('Server', server_name)
     return template('<b>Welcome to {{server_name}}</b>!',
                     server_name=server_name)
 
@@ -58,18 +68,18 @@ def init_pid():
 
 def init_router(app):
     app.route('/', ['GET'], fun.server_static)
+    # app.route(('/', '/static/', '/static/<filepath:path>'), ['GET'], fun.server_static)
+    app.route('/static/<filepath:re:.*\.css|.*\.js|.*\.png|.*\.jpg|.*\.gif|.*\.ttf|.*\.otf|.*\.eot|.*\.woff|.*\.woff2|.*\.svg|.*\.map>', ['GET'], fun.server_static)
     app.route('/xsrf', ['GET'], fun.xsrf)
     app.route('/authstatus', ['POST'], fun.authstatus)
     app.route('/login', ['POST'], fun.login)
-    app.route('/hello/<name>', ['GET'], fun.hello)
-    app.route('/static/', ['GET'], fun.server_static)
-    app.route('/static/<filepath:path>', ['GET'], fun.server_static)
+    app.route(('/hello', '/hello/<name>'), ['GET'], fun.hello)
     app.route('/partials/<filepath:path>', ['GET'], fun.server_partials)
     app.route('/download/<filename:path>', ['GET'], fun.download)
     app.route('/getclientip', ['GET'], fun.show_client_ip)
     app.error(404, fun.error404)
-    app.route('/version', ['GET'], fun.version)
-    app.route('/version/<type>', ['GET'], fun.version)
+    # app.error(500, fun.error404)
+    app.route(['/version', '/version/', '/version/<type>'], ['GET'], fun.version)
 
 
 def https_redirect(app):
@@ -86,5 +96,5 @@ if __name__ == '__main__':
     # before_request = app.hook('before_request')
     # before_request(https_redirect(app))
     init_router(app)
-    init_pid()
+    # init_pid()
     run(**app_config)

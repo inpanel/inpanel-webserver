@@ -7,7 +7,6 @@
 # InPanel is distributed under the terms of the New BSD License.
 # The full license can be found in 'LICENSE'.
 # Based on: http://egret.psychol.cam.ac.uk/pythonlib/wsgi_gzipper.py
-
 '''the Gzip Module for InPanel Web Server.'''
 
 from gzip import GzipFile
