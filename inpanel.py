@@ -53,6 +53,10 @@ def hook_after_request():
     response.headers['Server'] = server_name
     response.headers['Access-Control-Allow-Origin'] = '*'
     # request.environ['PATH_INFO'] = request.environ['PATH_INFO'].rstrip('/')
+    # if request.get_header('Origin'):
+    #     response.headers('Access-Control-Allow-Origin', request.get_header('Origin'))
+    #     response.headers('Access-Control-Allow-Headers', 'X-ACCESS-TOKEN, Content-Type')
+    #     response.headers('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
 
 @app.route('/index', method=['GET'])
 def index():
@@ -67,14 +71,14 @@ def init_pid():
 
 
 def init_router(app):
-    app.route('/', ['GET'], fun.server_static)
-    # app.route(('/', '/static/', '/static/<filepath:path>'), ['GET'], fun.server_static)
-    app.route('/static/<filepath:re:.*\.css|.*\.js|.*\.png|.*\.jpg|.*\.gif|.*\.ttf|.*\.otf|.*\.eot|.*\.woff|.*\.woff2|.*\.svg|.*\.map>', ['GET'], fun.server_static)
+    # app.route('/', ['GET'], fun.server_static)
+    app.route('/', ['GET'], fun.index)
+    app.route('/client/<server>/', ['GET'], fun.client_server)
+    app.route('/static/<filepath:path>', ['GET'], fun.server_static)
     app.route('/xsrf', ['GET'], fun.xsrf)
-    app.route('/authstatus', ['POST'], fun.authstatus)
+    app.route('/authstatus', ['GET', 'POST'], fun.authstatus)
     app.route('/login', ['POST'], fun.login)
     app.route(('/hello', '/hello/<name>'), ['GET'], fun.hello)
-    app.route('/partials/<filepath:path>', ['GET'], fun.server_partials)
     app.route('/download/<filename:path>', ['GET'], fun.download)
     app.route('/getclientip', ['GET'], fun.show_client_ip)
     app.error(404, fun.error404)

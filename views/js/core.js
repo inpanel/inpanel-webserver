@@ -1,11 +1,12 @@
-var releasetime = '2020-05-13 10:20:00 GMT+0800';
+// var releasetime = '2020-05-13 10:20:00 GMT+0800';
 var _v = new Date(releasetime).getTime() / 1000;
+var template_path = '/static/template/'
 //if (1) _v += Math.random(); // ie test mode
 var inpanel = angular.module('inpanel', ['inpanel.services', 'inpanel.directives', 'inpanel.filters']);
 inpanel.config(['$routeProvider', function ($routeProvider) {
     var _r = function (t, c, a) {
         var r = {
-            templateUrl: template_path + '/partials/' + t + '.html?_v=' + _v,
+            templateUrl: template_path + t + '.html?_v=' + _v,
             controller: c,
             reloadOnSearch: false
         };

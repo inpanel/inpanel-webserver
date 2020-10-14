@@ -5,7 +5,7 @@ angular.module('inpanel.directives', []).
             transclude: true,
             scope: {},
             replace: true,
-            templateUrl: template_path + '/partials/directives/navbar.html',
+            templateUrl: template_path + '/directives/navbar.html',
             controller: ['$scope', '$rootScope', function ($scope, $rootScope) {
                 $rootScope.navbar_loaded = true;
             }]
@@ -33,7 +33,7 @@ angular.module('inpanel.directives', []).
             transclude: true,
             scope: {},
             replace: true,
-            templateUrl: template_path + '/partials/directives/message.html',
+            templateUrl: template_path + '/directives/message.html',
             controller: ['$scope', '$rootScope', function ($scope, $rootScope) {
                 $rootScope.showErrorMsg = false;
                 $rootScope.errorMessage = '';
@@ -54,7 +54,7 @@ angular.module('inpanel.directives', []).
             transclude: true,
             scope: {},
             replace: true,
-            templateUrl: template_path + '/partials/directives/srvminiop.html',
+            templateUrl: template_path + '/directives/srvminiop.html',
             controller: ['$scope', function ($scope) {
                 $scope.$scope = $scope.$parent;
             }]
@@ -66,7 +66,7 @@ angular.module('inpanel.directives', []).
             transclude: true,
             scope: {},
             replace: true,
-            templateUrl: template_path + '/partials/directives/srvbase.html',
+            templateUrl: template_path + '/directives/srvbase.html',
             controller: ['$rootScope', '$scope', 'Request', 'Backend', function ($rootScope, $scope, Request, Backend) {
                 $scope.$scope = $scope.$parent;
                 $scope.pkginfo = null;
@@ -130,7 +130,7 @@ angular.module('inpanel.directives', []).
             transclude: true,
             scope: {},
             replace: true,
-            templateUrl: template_path + '/partials/directives/srvinstall.html',
+            templateUrl: template_path + '/directives/srvinstall.html',
             controller: ['$rootScope', '$scope', 'Request', 'Timeout', 'Backend', function ($rootScope, $scope, Request, Timeout, Backend) {
                 $scope.$scope = $scope.$parent;
 
@@ -321,7 +321,7 @@ angular.module('inpanel.directives', []).
             transclude: true,
             scope: {},
             replace: true,
-            templateUrl: template_path + '/partials/directives/srvupdate.html',
+            templateUrl: template_path + '/directives/srvupdate.html',
             controller: ['$rootScope', '$scope', 'Request', 'Timeout', 'Backend', function ($rootScope, $scope, Request, Timeout, Backend) {
                 $scope.$scope = $scope.$parent;
 
@@ -434,7 +434,7 @@ angular.module('inpanel.directives', []).
             transclude: true,
             scope: {},
             replace: true,
-            templateUrl: template_path + '/partials/directives/srvext.html',
+            templateUrl: template_path + '/directives/srvext.html',
             controller: ['$rootScope', '$scope', 'Request', 'Timeout', 'Backend', function ($rootScope, $scope, Request, Timeout, Backend) {
                 $scope.$scope = $scope.$parent;
 
@@ -583,7 +583,7 @@ angular.module('inpanel.directives', []).
             transclude: true,
             scope: {},
             replace: true,
-            templateUrl: template_path + '/partials/directives/srvuninstall.html',
+            templateUrl: template_path + '/directives/srvuninstall.html',
             controller: ['$rootScope', '$scope', 'Request', 'Timeout', 'Backend', function ($rootScope, $scope, Request, Timeout, Backend) {
                 $scope.$scope = $scope.$parent;
 
@@ -664,7 +664,7 @@ angular.module('inpanel.directives', []).
             transclude: true,
             scope: {},
             replace: true,
-            templateUrl: template_path + '/partials/directives/srvfile.html',
+            templateUrl: template_path + '/directives/srvfile.html',
             controller: ['$scope', function ($scope) { }]
         };
     }).
@@ -674,7 +674,7 @@ angular.module('inpanel.directives', []).
             transclude: true,
             scope: {},
             replace: true,
-            templateUrl: template_path + '/partials/directives/srvlog.html',
+            templateUrl: template_path + '/directives/srvlog.html',
             controller: ['$scope', function ($scope) { }]
         };
     }).
@@ -684,7 +684,7 @@ angular.module('inpanel.directives', []).
             transclude: true,
             scope: {},
             replace: true,
-            templateUrl: template_path + '/partials/directives/selector.html',
+            templateUrl: template_path + '/directives/selector.html',
             controller: ['$scope', 'Request', function ($scope, Request) {
                 $scope.$scope = $scope.$parent;
                 $scope.onlydir = true;
